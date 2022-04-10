@@ -5,7 +5,7 @@
 
 > <br>
 > 
-> * frontend - html, tailwind, typescipt
+> * frontend - reactjs, tailwind, typescipt
 > * backend - python-flask
 > * database - sqlite, flask-sqlalchemy
 > 
