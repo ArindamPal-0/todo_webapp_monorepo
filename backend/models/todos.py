@@ -47,24 +47,30 @@ class Todo(db.Model):
 def get_todo(id: int):
     todo = Todo.query.filter_by(id=id).first()
     if todo is None:
-        return Status(StatusCode.ERROR, 'not a valid id.')
+        return None, Status(StatusCode.ERROR, 'todo for id does not exist.')
 
+    format = '%d/%m/%Y %I:%M:%S %p'
+    dc = datetime.strftime(todo.date_created, format)
+    dm = datetime.strftime(todo.date_modified, format)
     return {
         'id': todo.id,
         'title': todo.title,
         'description': todo.description,
-        'date_created': todo.date_created,
-        'date_modified': todo.date_modified
+        'date_created': dc,
+        'date_modified': dm
     }, Status(StatusCode.SUCCESS, 'todo fetched.')
 
 def get_all():
     todos = Todo.query.all()
+
+    format = '%d/%m/%Y %I:%M:%S %p'
+
     return [{
         'id': todo.id,
         'title': todo.title,
         'description': todo.description,
-        'date_created': todo.date_created,
-        'date_modified': todo.date_modified
+        'date_created': datetime.strftime(todo.date_created, format),
+        'date_modified': datetime.strftime(todo.date_modified, format)
     } for todo in todos], Status(StatusCode.SUCCESS, 'all todo fetched')
 
 def create_todo(title: str = None, desc: str = None):
@@ -74,7 +80,7 @@ def create_todo(title: str = None, desc: str = None):
     db.session.add(todo)
     db.session.commit()
     
-    return Status(StatusCode.SUCCESS, 'todo created.')
+    return todo.id, Status(StatusCode.SUCCESS, 'todo created.')
 
 def update_todo(id: int, title: str = None, desc: str = None):
     if id is None:
@@ -85,7 +91,7 @@ def update_todo(id: int, title: str = None, desc: str = None):
 
     todo = Todo.query.filter_by(id=id).first()
     if todo is None:
-        return Status(StatusCode.FAILED, 'not a valid id.')
+        return Status(StatusCode.FAILED, 'todo for id does not exist.')
 
     if title is not None:
         todo.title = title
@@ -101,11 +107,11 @@ def update_todo(id: int, title: str = None, desc: str = None):
 
 def delete_todo(id: int):
     if id is None:
-        return Status(StatusCode.FAILED, 'id should not be None.')
+        return Status(StatusCode.ERROR, 'id should not be None.')
 
     todo = Todo.query.filter_by(id=id).first()
     if todo is None:
-        return Status(StatusCode.ERROR, 'not a valid id.')
+        return Status(StatusCode.FAILED, 'todo for id does not exist.')
     
     db.session.delete(todo)
     db.session.commit()
