@@ -5,6 +5,25 @@
 
 ---
 
+
+<br><br>
+
+
+> <br>
+> 
+> ## Setup for local development
+> 
+> Make sure to clone the repository first.
+> ### **Windows**
+> ```powershell
+>   $ cd frontend # change to frontend project directory
+>   $ npm install # install all the node dependencies
+>   $ npm start # to start the local server
+> ```
+> 
+> <br>
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
